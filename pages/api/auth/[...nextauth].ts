@@ -8,7 +8,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "@/app/libs/prismadb"
 
 export const authOptions: AuthOptions = {
-    secret: process.env.NEXTAUTH_SECRET,
     adapter: PrismaAdapter(prisma),
     providers: [
         GithubProvider({
@@ -45,8 +44,9 @@ export const authOptions: AuthOptions = {
                     user.hashedPassword
                 );
 
-                if (!isCorrectPassword)
+                if (!isCorrectPassword) {
                     throw new Error('Invalid credentials');
+                }
 
                 return user;
             }
@@ -58,7 +58,8 @@ export const authOptions: AuthOptions = {
     debug: process.env.NODE_ENV === 'development',
     session: {
         strategy: "jwt",
-    }
+    },
+    secret: process.env.NEXTAUTH_SECRET,
 }
 
 export default NextAuth(authOptions);
